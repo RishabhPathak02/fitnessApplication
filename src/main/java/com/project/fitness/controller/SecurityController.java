@@ -9,4 +9,12 @@ public class SecurityController {
     public String getMessage(){
         return "hello sir" ;
     }
+    @GetMapping("/admin/hello")
+    public String sayAdminHello(){
+        return "Hello, Admin";
+    }
+    @GetMapping("/user/hello")
+    public String sayuserHello(){
+        return "Hello, User";
+    }
 }

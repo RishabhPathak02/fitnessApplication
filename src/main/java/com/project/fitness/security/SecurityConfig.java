@@ -15,26 +15,34 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity){
-        httpSecurity.authorizeHttpRequests(authorizeRequest -> authorizeRequest.anyRequest().authenticated());
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+        httpSecurity.authorizeHttpRequests(
+                authorizeRequest -> authorizeRequest
+                        .requestMatchers("/user/**").hasAnyRole("ADMIN" , "USER")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated());
         httpSecurity.httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
     }
+
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         UserDetails user1 = User.withUsername("user1")
                 .password("{noop}password1")
-                .build() ;
+                .roles("USER")
+                .build();
         UserDetails user2 = User.withUsername("user2")
                 .password("{noop}password2")
-                .build() ;
+                .roles("USER")
+                .build();
 
         UserDetails admin = User.withUsername("admin")
                 .password("{noop}adminPassword")
-                .build() ;
+                .roles("ADMIN")
+                .build();
 
 
-        return new InMemoryUserDetailsManager(user1 , user2 , admin);
+        return new InMemoryUserDetailsManager(user1, user2, admin);
     }
 
 }
